@@ -1,20 +1,31 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './css/write.css';
-import { FaTimes } from 'react-icons/fa';
+import Header from './Header';
 
-const write = () => {
+const Write = () => {
+  const navigate = useNavigate();
+
+  // const handleClose = () => navigate('/');
+  const handleBack = () => {
+    // 예시: 이전 페이지로 이동
+    navigate(-1);
+  };  
+  const handleSubmit = () => {
+    // 저장 로직 추가 가능
+    navigate('/');
+  };
+
   return (
     <div className="write-container">
-      {/* 상단 바 */}
-      <div className="write-header">
-        <button className="write-close"><FaTimes /></button>
-        <h2 className="write-title">글쓰기</h2>
-        <button className="write-submit">완료</button>
-      </div>
+      <Header
+        title="글쓰기"
+        onClose={handleBack}
+        buttonLabel="완료"
+        onButtonClick={handleSubmit}
+      />
+      {/* <Header title="회원가입" onClose={handleBack} /> */}
 
-      <hr className="write-divider" />
-
-      {/* 입력 폼 */}
       <div className="write-form">
         <input
           className="write-input-title"
@@ -30,4 +41,4 @@ const write = () => {
   );
 };
 
-export default write;
+export default Write;

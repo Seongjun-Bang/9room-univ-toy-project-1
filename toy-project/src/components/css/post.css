@@ -1,0 +1,99 @@
+.post-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .post-container {
+    background-color: #fff;
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .post-content-area {
+    padding: 1rem;
+  }
+  
+  .post-detail-header h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .post-meta {
+    font-size: 0.8rem;
+    color: #999;
+    margin-bottom: 1rem;
+  }
+  
+  .post-detail-body {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+    white-space: pre-line;
+  }
+  
+  .post-detail-footer {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.9rem;
+    color: #444;
+    margin-bottom: 1rem;
+  }
+  
+  .comment-section {
+    padding: 0 1rem;
+    flex-grow: 1;
+  }
+  
+  .comment {
+    border-top: 1px solid #eee;
+    padding: 1rem 0;
+    font-size: 0.9rem;
+  }
+  
+  .comment-meta {
+    font-weight: bold;
+    font-size: 0.88rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .comment-submeta {
+    font-size: 0.75rem;
+    color: #aaa;
+    margin-bottom: 0.5rem;
+  }
+  
+  .reply {
+    margin-left: 1.5rem;
+    font-size: 0.85rem;
+    color: #555;
+    margin-bottom: 0.25rem;
+  }
+  
+  .comment-input {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background-color: #fff7ef;
+    border-top: 1px solid #eee;
+  }
+  
+  .comment-input input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 0.9rem;
+    padding: 0.5rem;
+    outline: none;
+  }
+  
+  .comment-input button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-left: 0.5rem;
+  }

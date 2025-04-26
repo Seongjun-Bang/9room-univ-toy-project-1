@@ -35,6 +35,7 @@ body, html {
   font-weight: bold;
   margin: 0 0 0.5rem 0;
   color: #222; /* 👈 글자색 검정으로 */
+  height: 35px;
 }
 
 
