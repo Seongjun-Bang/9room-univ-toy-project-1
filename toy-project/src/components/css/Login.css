@@ -1,0 +1,106 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.login-box {
+  padding: 40px 30px;
+  border-radius: 12px;
+  width: 320px;
+  text-align: center;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.logo-icon {
+  width: 65px;
+  height: 59px;
+}
+
+.app-name {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+  text-align: left;
+}
+
+.app-subtitle {
+  font-size: 12px;
+  color: #555;
+  margin: 0;
+}
+
+.login-input {
+  width: 90%;
+  padding: 12px 16px;
+  margin: 10px 0;
+  border-radius: 24px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.login-button {
+  width: 100%;
+  padding: 12px 0;
+  margin: 12px 0;
+  background-color: #f3e8d3;
+  border: none;
+  border-radius: 24px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.login-links {
+  font-size: 12px;
+  color: #888;
+  margin: 12px 0;
+}
+
+.login-links a {
+  color: #444;
+  text-decoration: none;
+  margin: 0 4px;
+}
+
+.sns-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-size: 12px;
+  color: #999;
+  margin: 30px 0 30px;
+}
+
+.sns-divider::before,
+.sns-divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #ddd;
+}
+
+.sns-divider::before {
+  margin-right: 8px;
+}
+
+.sns-divider::after {
+  margin-left: 8px;
+}
+
+
+.sns-icons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.sns-icons img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
