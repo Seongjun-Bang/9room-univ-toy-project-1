@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './css/LabLocation.css';
 import PinIcon from '../assets/Pin.svg';
+import NavBar from './nav_bar';
 
 function LabLocation() {
   const allLabs = [
@@ -21,6 +22,7 @@ function LabLocation() {
     : allLabs;
 
   return (
+    <>
     <div className="lab-page">
       <h2 className="lab-title">우리 과방 위치는?</h2>
 
@@ -62,6 +64,8 @@ function LabLocation() {
         ))}
       </div>
     </div>
+      <NavBar active="과방" />
+    </>
   );
 }
 
