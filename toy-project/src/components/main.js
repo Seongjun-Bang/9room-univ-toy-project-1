@@ -1,5 +1,5 @@
 import React from 'react';
-import './css/Main.css';
+import './css/main.css';
 // import CarIcon from '../assets/Car.svg';
 import PinIcon from '../assets/Pin.svg';
 // import PersonIcon from '../assets/Person.svg';
