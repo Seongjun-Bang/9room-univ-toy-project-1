@@ -121,3 +121,32 @@
   margin-top: 4px;
   margin-bottom: 0;
 }
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+  padding: 0 1rem;
+  background-color: #ffffff;
+  font-size: 1rem;
+  font-weight: bold;
+  position: relative;
+}
+
+/* 타이틀 중앙 고정 */
+.header-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.1rem;
+  white-space: nowrap;
+}
+
+/* 아래 구분선 */
+.write-divider {
+  border: none;
+  height: 6px;
+  background-color: #C43F28;
+  margin: 0;
+}

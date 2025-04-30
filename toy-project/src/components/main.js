@@ -3,19 +3,17 @@ import './css/main.css';
 // import CarIcon from '../assets/Car.svg';
 import PinIcon from '../assets/Pin.svg';
 // import PersonIcon from '../assets/Person.svg';
-import { useNavigate } from 'react-router-dom';
-import Header from './Header';
 import NavBar from './nav_bar';
 
 
 function Main() {
-  const navigate = useNavigate();
-  const handleBack = () => {
-    navigate(-1);
-  }
+
   return (
     <div className="home-container">
-      <Header title = "학과사전" onClose={handleBack}/>
+            <div className="header-container">
+              <h2 className="header-title">학과사전</h2>
+            </div>
+            <hr className="write-divider" />
 
       <section className="section">
         <h3>인기글</h3>
