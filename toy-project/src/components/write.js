@@ -17,13 +17,15 @@ const Write = () => {
   };
 
   return (
-    <div className="write-container">
+    <>
       <Header
         title="글쓰기"
         onClose={handleBack}
         buttonLabel="완료"
         onButtonClick={handleSubmit}
       />
+    <div className="write-container">
+
       {/* <Header title="회원가입" onClose={handleBack} /> */}
 
       <div className="write-form">
@@ -38,6 +40,7 @@ const Write = () => {
         />
       </div>
     </div>
+    </>
   );
 };
 
