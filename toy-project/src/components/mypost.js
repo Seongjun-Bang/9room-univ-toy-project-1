@@ -45,14 +45,14 @@ const handleDelete = () => {
   };
 
   return (
-    <div className="post-wrapper">
-      <Header
+    <>
+    <Header
         title="자유게시판"
         onClose={handleBack}
         buttonLabel="삭제"
         onButtonClick={handleDelete}
       />
-
+    <div className="post-wrapper">
       <div className="post-container">
         <div className="post-content-area">
           <div className="post-detail-header">
@@ -94,6 +94,7 @@ const handleDelete = () => {
         </button>
       </div>
     </div>
+    </>
   );
 };
 
