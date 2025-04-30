@@ -1,10 +1,11 @@
 import React from 'react';
 import './css/Main.css';
-import CarIcon from '../assets/Car.svg';
+// import CarIcon from '../assets/Car.svg';
 import PinIcon from '../assets/Pin.svg';
-import PersonIcon from '../assets/Person.svg';
+// import PersonIcon from '../assets/Person.svg';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
+import NavBar from './nav_bar';
 
 
 function Main() {
@@ -42,7 +43,7 @@ function Main() {
       </section>
 
       <section className="section">
-        <h3>과방 위치</h3>
+        <h3>우리 과방 위치</h3>
   <div className="small-card lab-card">
     <img src={PinIcon} alt="pin" className="lab-icon" />
     <div className="lab-info">
@@ -50,9 +51,8 @@ function Main() {
       <p>공대 다동&nbsp;&nbsp;4층 A411호</p>
     </div>
   </div>
-
-
       </section>
+      <NavBar active="홈" />
     </div>
   );
 }

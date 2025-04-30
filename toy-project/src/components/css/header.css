@@ -1,0 +1,49 @@
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+  padding: 0 1rem;
+  background-color: #ffffff;
+  font-size: 1rem;
+  font-weight: bold;
+  position: relative;
+}
+
+/* 타이틀 중앙 고정 */
+.header-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.1rem;
+  white-space: nowrap;
+}
+
+/* 닫기 버튼 (왼쪽) */
+.header-close {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* 오른쪽 버튼 */
+.header-button {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* 버튼이 없을 경우 공간 유지용 */
+.header-right-space {
+  width: 1rem;
+}
+
+/* 아래 구분선 */
+.write-divider {
+  border: none;
+  height: 6px;
+  background-color: #C43F28;
+  margin: 0;
+}

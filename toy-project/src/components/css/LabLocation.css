@@ -61,25 +61,46 @@
 
 .dropdown-list {
   position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: white;
+  width: 100%;
+  background: #fff;
   border: 1px solid #eee;
   border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   margin-top: 4px;
   z-index: 100;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  max-height: 200px;
+  overflow-y: auto;
 }
 
-.dropdown-list li {
+.dropdown-item {
   padding: 10px 16px;
-  font-size: 14px;
   cursor: pointer;
+  transition: background 0.2s;
 }
 
-.dropdown-list li:hover {
-  background-color: #f8f8f8;
+.dropdown-item:hover {
+  background-color: #f5f5f5;
+}
+
+.no-result {
+  color: #aaa;
+  font-style: italic;
+  text-align: center;
+  padding: 10px;
+}
+
+.lab-select-box input {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.dropdown-item:hover {
+  background-color: #f5f5f5;
 }
 
 .lab-list {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './css/LabLocation.css';
-import PinIcon from '../assets/Pin.svg';
+// import PinIcon from '../assets/Pin.svg';
 import NavBar from './nav_bar';
 
 function LabLocation() {
@@ -14,56 +14,78 @@ function LabLocation() {
   ];
 
   const majors = [...new Set(allLabs.map(lab => lab.major))];
-  const [selectedMajor, setSelectedMajor] = useState('');
+  const [searchText, setSearchText] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const filteredLabs = selectedMajor
-    ? allLabs.filter(lab => lab.major === selectedMajor)
+  const filteredMajors = majors.filter(major =>
+    major.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  // ✅ 입력값 포함된 전공만 실시간 필터링
+  const filteredLabs = searchText
+    ? allLabs.filter(lab =>
+        lab.major.toLowerCase().includes(searchText.toLowerCase())
+      )
     : allLabs;
 
   return (
     <>
-    <div className="lab-page">
-      <h2 className="lab-title">우리 과방 위치는?</h2>
+      <div className="lab-page">
+        <h2 className="lab-title">우리 과방 위치는?</h2>
 
-      
-      <div className="lab-select-wrapper">
-        <div
-          className="lab-select-box"
-          onClick={() => setDropdownOpen(prev => !prev)}
-        >
-          <input
-            type="text"
-            placeholder="다른 과방 찾기"
-            readOnly
-            value={selectedMajor}
-          />
-          <span className="dropdown-icon">{dropdownOpen ? '▲' : '▼'}</span>
+        <div className="lab-select-wrapper">
+          <div className="lab-select-box" onClick={() => setDropdownOpen(prev => !prev)}>
+            <input
+              type="text"
+              placeholder="다른 과방 찾기"
+              value={searchText}
+              onChange={(e) => {
+                setSearchText(e.target.value);
+                setDropdownOpen(true);
+              }}
+            />
+            <span className="dropdown-icon">{dropdownOpen ? '▲' : '▼'}</span>
+          </div>
+
+          {dropdownOpen && (
+            <div className="dropdown-list">
+              <div
+                className="dropdown-item"
+                onClick={() => {
+                  setSearchText('');
+                  setDropdownOpen(false);
+                }}
+              >
+                전체 보기
+              </div>
+              {filteredMajors.map((major, idx) => (
+                <div
+                  key={idx}
+                  className="dropdown-item"
+                  onClick={() => {
+                    setSearchText(major);
+                    setDropdownOpen(false);
+                  }}
+                >
+                  {major}
+                </div>
+              ))}
+              {filteredMajors.length === 0 && (
+                <div className="dropdown-item no-result">검색 결과 없음</div>
+              )}
+            </div>
+          )}
         </div>
 
-        {dropdownOpen && (
-          <ul className="dropdown-list">
-            <li onClick={() => { setSelectedMajor(''); setDropdownOpen(false); }}>
-              전체 보기
-            </li>
-            {majors.map((major, idx) => (
-              <li key={idx} onClick={() => { setSelectedMajor(major); setDropdownOpen(false); }}>
-                {major}
-              </li>
-            ))}
-          </ul>
-        )}
+        <div className="lab-list">
+          {filteredLabs.map((lab, idx) => (
+            <div className="lab-card" key={idx}>
+              <strong>{lab.major}</strong>
+              <p>{lab.location}</p>
+            </div>
+          ))}
+        </div>
       </div>
-
-      <div className="lab-list">
-        {filteredLabs.map((lab, idx) => (
-          <div className="lab-card" key={idx}>
-            <strong>{lab.major}</strong>
-            <p>{lab.location}</p>
-          </div>
-        ))}
-      </div>
-    </div>
       <NavBar active="과방" />
     </>
   );

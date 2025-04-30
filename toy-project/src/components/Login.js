@@ -26,11 +26,11 @@ function Login() {
         <button className="login-button">로그인</button>
 
         <div className="login-links">
-          <a href="#">아이디 찾기</a>
+          <a href="./main">아이디 찾기</a>
           <span>|</span>
-          <a href="#">비밀번호 찾기</a>
+          <a href="./SignUpOCR">비밀번호 찾기</a>
           <span>|</span>
-          <a href="#">회원가입</a>
+          <a href="./Register">회원가입</a>
         </div>
 
         <div className="sns-divider"><span>SNS 계정으로 로그인</span></div>
