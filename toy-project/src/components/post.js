@@ -41,9 +41,9 @@ const Post = () => {
   };
 
   return (
+    <>
+    <Header title="자유게시판" onClose={handleBack} />
     <div className="post-wrapper">
-      <Header title="자유게시판" onClose={handleBack} />
-
       <div className="post-container">
         <div className="post-content-area">
           <div className="post-detail-header">
@@ -85,6 +85,7 @@ const Post = () => {
         </button>
       </div>
     </div>
+    </>
   );
 };
 

@@ -9,12 +9,12 @@ import NavBar from './nav_bar';
 function Main() {
 
   return (
+    <>
+    <div className="header-container">
+      <h2 className="header-title">학과사전</h2>
+    </div>
+    <hr className="write-divider" />
     <div className="home-container">
-            <div className="header-container">
-              <h2 className="header-title">학과사전</h2>
-            </div>
-            <hr className="write-divider" />
-
       <section className="section">
         <h3>인기글</h3>
         <div className="post-list">
@@ -52,6 +52,7 @@ function Main() {
       </section>
       <NavBar active="홈" />
     </div>
+    </>
   );
 }
 
