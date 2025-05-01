@@ -9,6 +9,7 @@ import LabLocation from './components/LabLocation';
 import Login from './components/Login';
 import SignUpOCR from './components/SignUpOCR';
 import Register from './components/Register';
+import OAuth2RedirectHandler from './components/OAuth2RedirectHandler'; // ✅ 추가
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="/LabLocation" element={<LabLocation />} />
         <Route path="/main" element={<Main />} />
         <Route path="/" element={<Login />} />
+        <Route path="/login-success" element={<OAuth2RedirectHandler />} /> {/* ✅ 추가 */}
         <Route path="/SignUpOCR" element={<SignUpOCR />} />
         <Route path="/Register" element={<Register />} />
       </Routes>
