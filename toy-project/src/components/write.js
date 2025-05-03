@@ -9,36 +9,29 @@ const Write = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
-  const handleBack = () => {
-    navigate(-1);
-  };
+  const handleBack = () => navigate(-1);
 
   const handleSubmit = async () => {
-    const email = localStorage.getItem('email'); // 사용자 이메일 (로그인 시 저장했다고 가정)
-    const token = localStorage.getItem('token'); // JWT 토큰
+    const token = localStorage.getItem('token');
+    const email = localStorage.getItem('email');
 
-    if (!email || !token) {
+    if (!token || !email) {
       alert('로그인이 필요합니다.');
       return;
     }
 
     try {
-      const response = await axios.post(
-        `http://218.51.41.52.nip.io:9600/api/boards?email=${email}`,
-        {
-          title,
-          content,
-          category: 'FREE', // 기본값 예시
+      await axios.post(`http://218.51.41.52.nip.io:9600/api/boards?email=${email}`, {
+        title,
+        content,
+        category: 'FREE',
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      });
 
-      alert('게시글이 성공적으로 작성되었습니다.');
+      alert('게시글이 작성되었습니다!');
       navigate('/');
     } catch (error) {
       console.error('게시글 작성 실패:', error);
