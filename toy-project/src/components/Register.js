@@ -54,14 +54,17 @@ function Register() {
             이메일
             <input type="email" name="email" className="register-input" required onChange={handleChange} />
           </label>
+
           <label>
             비밀번호
             <input type="password" name="password" className="register-input" required onChange={handleChange} />
           </label>
+
           <label>
             비밀번호 재입력
             <input type="password" name="confirmPassword" className="register-input" required onChange={handleChange} />
           </label>
+
           <label>
             닉네임
             <input type="text" name="name" className="register-input" required onChange={handleChange} />
