@@ -1,19 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './css/write.css';
 import Header from './Header';
+import axios from 'axios';
 
 const Write = () => {
   const navigate = useNavigate();
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
 
-  // const handleClose = () => navigate('/');
   const handleBack = () => {
-    // 예시: 이전 페이지로 이동
     navigate(-1);
-  };  
-  const handleSubmit = () => {
-    // 저장 로직 추가 가능
-    navigate('/');
+  };
+
+  const handleSubmit = async () => {
+    const email = localStorage.getItem('email'); // 사용자 이메일 (로그인 시 저장했다고 가정)
+    const token = localStorage.getItem('token'); // JWT 토큰
+
+    if (!email || !token) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `http://218.51.41.52.nip.io:9600/api/boards?email=${email}`,
+        {
+          title,
+          content,
+          category: 'FREE', // 기본값 예시
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      alert('게시글이 성공적으로 작성되었습니다.');
+      navigate('/');
+    } catch (error) {
+      console.error('게시글 작성 실패:', error);
+      alert('게시글 작성에 실패했습니다.');
+    }
   };
 
   return (
@@ -24,22 +54,23 @@ const Write = () => {
         buttonLabel="완료"
         onButtonClick={handleSubmit}
       />
-    <div className="write-container">
-
-      {/* <Header title="회원가입" onClose={handleBack} /> */}
-
-      <div className="write-form">
-        <input
-          className="write-input-title"
-          type="text"
-          placeholder="제목을 입력해주세요."
-        />
-        <textarea
-          className="write-input-content"
-          placeholder="자유롭게 이야기 해보세요."
-        />
+      <div className="write-container">
+        <div className="write-form">
+          <input
+            className="write-input-title"
+            type="text"
+            placeholder="제목을 입력해주세요."
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+          />
+          <textarea
+            className="write-input-content"
+            placeholder="자유롭게 이야기 해보세요."
+            value={content}
+            onChange={e => setContent(e.target.value)}
+          />
+        </div>
       </div>
-    </div>
     </>
   );
 };

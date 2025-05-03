@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './css/Login.css';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 import BookLogo from '../assets/BookLogo.svg';
 import GoogleLogo from '../assets/GoogleLogo.svg';
 import TwitterLogo from '../assets/TwitterLogo.svg';
@@ -8,9 +11,36 @@ import MessengerLogo from '../assets/MessengerLogo.svg';
 import FacebookLogo from '../assets/FacebookLogo.svg';
 
 function Login() {
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   const handleGoogleLogin = () => {
     console.log('▶️ handleGoogleLogin 호출됨');
     window.location.href = 'http://218.51.41.52.nip.io:9600/oauth2/authorization/google';
+  };
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post('http://218.51.41.52.nip.io:9600/api/users/login', {
+        email,
+        password
+      });
+
+      const token = response.data.data.token;
+      const userInfo = response.data.data.userInfo;
+
+      // 토큰 저장
+      localStorage.setItem('token', token);
+      localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
+      alert('로그인 성공!');
+      navigate('/main'); // 로그인 후 이동할 페이지
+    } catch (error) {
+      console.error('로그인 실패:', error);
+      alert('로그인에 실패했습니다. 이메일 또는 비밀번호를 확인해주세요.');
+    }
   };
 
   return (
@@ -24,10 +54,22 @@ function Login() {
           </div>
         </div>
 
-        <input type="text" placeholder="아이디 입력" className="login-input" />
-        <input type="password" placeholder="비밀번호 입력" className="login-input" />
+        <input
+          type="text"
+          placeholder="아이디 입력"
+          className="login-input"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="비밀번호 입력"
+          className="login-input"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+        />
 
-        <button type="button" className="login-button">
+        <button type="button" className="login-button" onClick={handleLogin}>
           로그인
         </button>
 
@@ -44,23 +86,19 @@ function Login() {
         </div>
 
         <div className="sns-icons">
-          <button
-            type="button"
-            onClick={handleGoogleLogin}
-            style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
-          >
+          <button onClick={handleGoogleLogin} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
             <img src={GoogleLogo} alt="google" />
           </button>
-          <button type="button" style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+          <button style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
             <img src={TwitterLogo} alt="twitter" />
           </button>
-          <button type="button" style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+          <button style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
             <img src={AppleLogo} alt="apple" />
           </button>
-          <button type="button" style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+          <button style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
             <img src={MessengerLogo} alt="message" />
           </button>
-          <button type="button" style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+          <button style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
             <img src={FacebookLogo} alt="facebook" />
           </button>
         </div>
