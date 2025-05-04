@@ -31,9 +31,10 @@ function Login() {
       const token = response.data.data.token;
       const userInfo = response.data.data.userInfo;
 
-      // 토큰 저장
+      // 토큰과 사용자 정보 저장
       localStorage.setItem('token', token);
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
+      localStorage.setItem('email', userInfo.email);
 
       alert('로그인 성공!');
       navigate('/main'); // 로그인 후 이동할 페이지

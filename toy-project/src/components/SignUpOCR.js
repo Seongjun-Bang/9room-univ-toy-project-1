@@ -9,7 +9,8 @@ import Header from './Header';
 const API_BASE_URL = 'http://218.51.41.52:9600';
 
 // 발급받은 JWT 토큰 (예시)
-const JWT_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtaW4wMjAyMjdAZ21haWwuY29tIiwiaWF0IjoxNzQ2MjU3NjI3LCJleHAiOjE3NDYyNjEyMjd9.P8FJSbUzc1NeG9dohmaC1A_LlX1bzDXrJ72z2zlE02w';
+// const JWT_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtaW4wMjAyMjdAZ21haWwuY29tIiwiaWF0IjoxNzQ2MjU3NjI3LCJleHAiOjE3NDYyNjEyMjd9.P8FJSbUzc1NeG9dohmaC1A_LlX1bzDXrJ72z2zlE02w';
+const JWT_TOKEN = localStorage.getItem('token');
 
 function SignUpOCR() {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ function SignUpOCR() {
   // 1) Register.js에서 저장해 둔 이메일 꺼내기
   const [email, setEmail] = useState('');
   useEffect(() => {
-    const savedEmail = localStorage.getItem('signupEmail');
+    const savedEmail = localStorage.getItem('email');
     if (!savedEmail) {
       alert('이메일 정보가 없습니다. 로그인 화면으로 이동합니다.');
       return navigate('/');
@@ -71,9 +72,9 @@ function SignUpOCR() {
       console.log('▶️ OCR 응답 본문:', json);
 
       if (res.status === 200) {
-        alert('학과 인증 성공! 로그인 화면으로 이동합니다.');
+        alert('학과 인증 성공! 메인 화면으로 이동합니다.');
         localStorage.removeItem('signupEmail');
-        navigate('/');  // 로그인 화면(“/”)으로 이동
+        navigate('/main');  // 로그인 화면(“/”)으로 이동
       } else {
         alert(`인증 실패: ${json.message || '알 수 없는 오류'}`);
       }

@@ -36,9 +36,14 @@ function Register() {
         name,
         department
       });
+
       alert('회원가입 성공!');
-      console.log('응답:', res.data);
-      navigate('/login'); // 회원가입 후 이동
+      console.log('✅ 응답:', res.data);
+
+      // ✅ 이메일을 signupEmail이라는 key로 저장 (OCR에서 사용)
+      localStorage.setItem('email', email);
+      // OCR 인증 페이지로 이동
+      navigate('/SignUpOCR');
     } catch (error) {
       console.error('회원가입 실패:', error.response?.data);
       alert(error.response?.data?.message || '회원가입에 실패했습니다.');
@@ -52,27 +57,59 @@ function Register() {
         <form className="register-form" onSubmit={handleSubmit}>
           <label>
             이메일
-            <input type="email" name="email" className="register-input" required onChange={handleChange} />
+            <input
+              type="email"
+              name="email"
+              className="register-input"
+              required
+              onChange={handleChange}
+            />
           </label>
 
           <label>
             비밀번호
-            <input type="password" name="password" className="register-input" required onChange={handleChange} />
+            <input
+              type="password"
+              name="password"
+              className="register-input"
+              required
+              onChange={handleChange}
+            />
           </label>
 
           <label>
             비밀번호 재입력
-            <input type="password" name="confirmPassword" className="register-input" required onChange={handleChange} />
+            <input
+              type="password"
+              name="confirmPassword"
+              className="register-input"
+              required
+              onChange={handleChange}
+            />
           </label>
 
           <label>
             닉네임
-            <input type="text" name="name" className="register-input" required onChange={handleChange} />
+            <input
+              type="text"
+              name="name"
+              className="register-input"
+              required
+              onChange={handleChange}
+            />
           </label>
+
           <label>
             학과
-            <input type="text" name="department" className="register-input" required onChange={handleChange} />
+            <input
+              type="text"
+              name="department"
+              className="register-input"
+              required
+              onChange={handleChange}
+            />
           </label>
+
           <button type="submit" className="submit-button">회원가입</button>
         </form>
       </div>
