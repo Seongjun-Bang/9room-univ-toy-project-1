@@ -52,6 +52,9 @@ function Main() {
       <div>
         <a href="./SignUpOCR">OCR인증</a>
       </div>
+      <div>
+        <a href="./UserManagementPage">사용자 페이지</a>
+      </div>
       </section>
       <NavBar active="홈" />
     </div>

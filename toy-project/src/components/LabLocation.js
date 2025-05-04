@@ -31,7 +31,7 @@ function LabLocation() {
   return (
     <>
       <div className="lab-page">
-        <h2 className="lab-title">우리 과방 위치는?</h2>
+        <h1 className="lab-title">우리 과방 위치는?</h1>
 
         <div className="lab-select-wrapper">
           <div className="lab-select-box" onClick={() => setDropdownOpen(prev => !prev)}>

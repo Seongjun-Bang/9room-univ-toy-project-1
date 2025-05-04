@@ -10,6 +10,7 @@ import Login from './components/Login';
 import SignUpOCR from './components/SignUpOCR';
 import Register from './components/Register';
 import OAuth2RedirectHandler from './components/OAuth2RedirectHandler'; // ✅ 추가
+import UserManagementPage from './components/UserManagementPage'; // ✅ 추가
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path="/login-success" element={<OAuth2RedirectHandler />} /> {/* ✅ 추가 */}
         <Route path="/SignUpOCR" element={<SignUpOCR />} />
         <Route path="/Register" element={<Register />} />
+        <Route path='/UserManagementPage' element={<UserManagementPage />} /> 
       </Routes>
     </Router>
   );

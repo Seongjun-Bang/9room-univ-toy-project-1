@@ -1,0 +1,66 @@
+/* UserManagementPage.css */
+.user-management-container {
+  max-width: 360px;
+  margin: 20px auto;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.user-management-container h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 4px solid #C63A3A; /* 메인 컬러 */
+  color: #333;
+}
+
+.section-box {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.info-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.info-row label {
+  font-size: 0.875rem;
+  color: #555;
+}
+.info-row span,
+.info-row input {
+  background: #fff9f5;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 1rem;
+  color: #222;
+}
+.info-row input {
+  width: 100%;
+}
+.info-row input:focus {
+  outline: 2px solid #C63A3A;
+}
+
+.action-button {
+  margin-top: 16px;
+  width: 100%;
+  padding: 12px;
+  background: #fff9f5;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #222;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.action-button:hover {
+  background: #ffece1;
+}
