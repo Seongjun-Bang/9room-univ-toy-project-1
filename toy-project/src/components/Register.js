@@ -43,7 +43,7 @@ function Register() {
       // ✅ 이메일을 signupEmail이라는 key로 저장 (OCR에서 사용)
       localStorage.setItem('email', email);
       // OCR 인증 페이지로 이동
-      navigate('/SignUpOCR');
+      navigate('/');
     } catch (error) {
       console.error('회원가입 실패:', error.response?.data);
       alert(error.response?.data?.message || '회원가입에 실패했습니다.');
