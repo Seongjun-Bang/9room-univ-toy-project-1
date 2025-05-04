@@ -41,3 +41,33 @@
   font-family: 'Noto Sans KR', sans-serif;
 }
 
+.write-label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 500;
+  font-size: 16px;
+  color: #333;
+}
+
+.write-category-select {
+  width: 100%;
+  padding: 10px 36px 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  margin-top: 6px;
+  margin-bottom: 1px;  /* 🔽 기존 20px이었다면 → 줄여서 8px 정도 */
+  background-color: #fff;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='30,50 70,90 110,50' fill='none' stroke='black' stroke-width='10'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  appearance: none;
+}
+
+.write-category-select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
