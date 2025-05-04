@@ -26,6 +26,7 @@ function App() {
         <Route path="/LabLocation" element={<LabLocation />} />
         <Route path="/main" element={<Main />} />
         <Route path="/" element={<Login />} />
+        <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
         <Route path="/login-success" element={<OAuth2RedirectHandler />} /> {/* ✅ 추가 */}
         <Route path="/SignUpOCR" element={<SignUpOCR />} />
         <Route path="/Register" element={<Register />} />
