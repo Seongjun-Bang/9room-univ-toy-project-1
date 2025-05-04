@@ -49,6 +49,9 @@ function Main() {
       <p>공대 다동&nbsp;&nbsp;4층 A411호</p>
     </div>
   </div>
+      <div>
+        <a href="./SignUpOCR">OCR인증</a>
+      </div>
       </section>
       <NavBar active="홈" />
     </div>
