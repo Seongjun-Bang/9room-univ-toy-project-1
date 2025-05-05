@@ -169,3 +169,13 @@
 .dropdown-item:hover {
   background-color: #f0f0f0;
 }
+
+/* 댓글 좋아요 버튼 */
+.comment-like-btn span {
+  font-size: 0.875rem;
+  color: #555;
+}
+.comment-like-btn:hover span,
+.comment-like-btn:hover svg {
+  opacity: 0.8;
+}
