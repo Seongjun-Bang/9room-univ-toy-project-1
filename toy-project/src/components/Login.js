@@ -35,6 +35,7 @@ function Login() {
       localStorage.setItem('token', token);
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
       localStorage.setItem('email', userInfo.email);
+      localStorage.setItem('id', userInfo.id);
 
       alert('로그인 성공!');
       navigate('/main'); // 로그인 후 이동할 페이지
