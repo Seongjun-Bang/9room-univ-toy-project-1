@@ -1,146 +1,171 @@
 .post-wrapper {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
-    width: 400px;
-    margin: auto;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 400px;
+  margin: auto;
+  position: relative; /* 하단 입력창과 분리 */
+  background: #fff;
+}
 
-  }
-  
-  .post-container {
-    background-color: #fff;
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .post-content-area {
-    padding: 1rem;
-  }
-  
-  .post-detail-header h3 {
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .post-meta {
-    font-size: 0.8rem;
-    color: #999;
-    margin-bottom: 1rem;
-  }
-  
-  .post-detail-body {
-    font-size: 0.95rem;
-    line-height: 1.5;
-    margin-bottom: 1.25rem;
-    white-space: pre-line;
-  }
-  
-  .post-detail-footer {
-    display: flex;
-    gap: 1.5rem;
-    font-size: 0.9rem;
-    color: #444;
-    margin-bottom: 1rem;
-  }
-  
-  .comment-section {
-    padding: 0 1rem;
-    flex-grow: 1;
-  }
-  
-  .comment {
-    border-top: 1px solid #eee;
-    padding: 1rem 0;
-    font-size: 0.9rem;
-  }
-  
-  .comment-meta {
-    font-weight: bold;
-    font-size: 0.88rem;
-    margin-bottom: 0.25rem;
-  }
-  
-  .comment-submeta {
-    font-size: 0.75rem;
-    color: #aaa;
-    margin-bottom: 0.5rem;
-  }
-  
-  .reply {
-    margin-left: 1.5rem;
-    font-size: 0.85rem;
-    color: #555;
-    margin-bottom: 0.25rem;
-  }
-  
-  .comment-input {
-    display: flex;
-    align-items: center;
-    padding: 0.75rem 1rem;
-    background-color: #fff7ef;
-    border-top: 1px solid #eee;
-  }
-  
-  .comment-input input {
-    flex: 1;
-    border: none;
-    background: transparent;
-    font-size: 0.9rem;
-    padding: 0.5rem;
-    outline: none;
-  }
-  
-  .comment-input button {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-    margin-left: 0.5rem;
-  }
+/* 스크롤 영역은 댓글 입력창 위까지만 잡힘 */
+.post-container {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  margin-bottom: 165px; /* 댓글 입력창 영역 확보 */
+}
 
-  .like-section {
-    display: inline-flex;
-    align-items: center;
-    cursor: pointer;
-    margin-right: 10px;
-  }
-  
-  .like-icon {
-    font-size: 18px;
-    transition: color 0.3s;
-  }
-  
-  .like-count {
-    margin-left: 4px;
-    font-size: 14px;
-    color: #333;
-  }
 
-  .dropdown-menu {
-    position: absolute;
-    top: 24px;
-    right: 0;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    min-width: 80px;
-    padding: 4px 0;
-  }
-  
-  .dropdown-item {
-    padding: 8px 12px;
-    cursor: pointer;
-    white-space: nowrap;
-    font-size: 14px;
-    color: #333;
-    transition: background 0.2s ease;
-  }
-  
-  .dropdown-item:hover {
-    background-color: #f0f0f0;
-  }
+.post-content-area {
+  padding: 1rem;
+}
+
+.post-detail-header h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.post-meta {
+  font-size: 0.8rem;
+  color: #999;
+  margin-bottom: 1rem;
+}
+
+.post-detail-body {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+  white-space: pre-line;
+}
+
+.post-detail-footer {
+  display: flex;
+  gap: 1.25rem;
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.comment-section {
+  padding: 0 1rem;
+}
+
+.comment {
+  border-top: 1px solid #eee;
+  padding: 0.5rem 0; /* 🔽 패딩 줄여서 간격 축소 */
+  font-size: 0.9rem;
+}
+
+.comment-meta {
+  font-weight: bold;
+  font-size: 0.88rem;
+  margin-bottom: 0.25rem;
+  color: #555;
+}
+
+.comment-body {
+  font-size: 0.95rem;
+  margin: 0.25rem 0;
+  color: #333;
+}
+
+.comment-submeta {
+  font-size: 0.75rem;
+  color: #aaa;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.comment-submeta .delete-button {
+  margin-left: auto;
+  color: #999;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/* ✅ 하단 고정 댓글 입력창 */
+.comment-input {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(90% - 2rem);
+  max-width: 400px;
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: #FEFBF5;
+  border: 1px solid #f0e6dd;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  z-index: 1000;
+}
+
+.comment-input input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 0.9rem;
+  padding: 0.5rem;
+  outline: none;
+}
+
+.comment-input button {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #b04b1f;
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+
+/* 추천 아이콘 스타일 */
+.like-section {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.like-icon {
+  font-size: 18px;
+  transition: color 0.3s;
+}
+
+.like-count {
+  margin-left: 4px;
+  font-size: 14px;
+  color: #333;
+}
+
+/* 옵션 메뉴 */
+.dropdown-menu {
+  position: absolute;
+  top: 24px;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  min-width: 80px;
+  padding: 4px 0;
+}
+
+.dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 14px;
+  color: #333;
+  transition: background 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
