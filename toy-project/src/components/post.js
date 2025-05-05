@@ -1,3 +1,4 @@
+// src/Post.js
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './css/post.css';
@@ -6,9 +7,14 @@ import axios from 'axios';
 import { FaPaperPlane, FaHeart } from 'react-icons/fa';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 
+const API_BASE_URL = 'http://218.51.41.52.nip.io:9600';
+
 const Post = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+  const email = localStorage.getItem('email');
+  const myId = localStorage.getItem('id');
 
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
@@ -21,94 +27,109 @@ const Post = () => {
   const [commentText, setCommentText] = useState('');
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  const token = localStorage.getItem('token');
-  const email = localStorage.getItem('email');
-  const myId = localStorage.getItem('id');
-
   const handleBack = () => navigate('/community');
 
   useEffect(() => {
+    // 게시글 가져오기
     const fetchPost = async () => {
       try {
-        const response = await axios.get(
-          `http://218.51.41.52.nip.io:9600/api/boards/${id}?email=${email}`,
-          { headers: { Authorization: `Bearer ${token}` } }
+        const { data } = await axios.get(
+          `${API_BASE_URL}/api/boards/${id}`,
+          {
+            params: { email },
+            headers: { Authorization: `Bearer ${token}` }
+          }
         );
-        const data = response.data.data;
-        setPost(data);
-        setLikeStatus(data.likeStatus);
-        setLikeCount(data.likeCount);
-        setIsMyPost(String(data.writerId) === String(myId));
+        const pd = data.data;
+        setPost(pd);
+        setLikeStatus(pd.likeStatus);
+        setLikeCount(pd.likeCount);
+        setIsMyPost(String(pd.writerId) === String(myId));
       } catch (err) {
         console.error('게시글 조회 실패:', err);
-        setError('게시글을 불러오지 못했습니다.');
+        setError('게시글을 불러오는 중 오류가 발생했습니다.');
       }
     };
 
+    // 댓글 가져오기
     const fetchComments = async () => {
       try {
-        const res = await axios.get(
-          `http://218.51.41.52.nip.io:9600/api/comments/board/${id}?email=${email}`,
-          { headers: { Authorization: `Bearer ${token}` } }
+        const { data } = await axios.get(
+          `${API_BASE_URL}/api/comments/board/${id}`,
+          {
+            params: { email },
+            headers: { Authorization: `Bearer ${token}` }
+          }
         );
-        const data = res.data.data;
-        setComments(Array.isArray(data.comments) ? data.comments : []);
-        setTotalComments(data.totalComments || 0);
+        const cd = data.data;
+        setComments(cd.comments || []);
+        setTotalComments(cd.totalComments || 0);
       } catch (err) {
         console.error('댓글 조회 실패:', err);
-        setComments([]);
-        setTotalComments(0);
       }
     };
 
     fetchPost();
     fetchComments();
-  }, [id, token, email, myId, refreshTrigger]);
+  }, [id, email, token, myId, refreshTrigger]);
 
+  // 게시글 좋아요
   const handleLike = async () => {
     try {
-      const response = await axios.post(
-        `http://218.51.41.52.nip.io:9600/api/boards/${id}/like?email=${email}`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
+      const { data } = await axios.post(
+        `${API_BASE_URL}/api/boards/${id}/like`,
+        null,
+        {
+          params: { email },
+          headers: { Authorization: `Bearer ${token}` }
+        }
       );
-      const updatedData = response.data.data;
-      setLikeStatus(updatedData.likeStatus);
-      setLikeCount(updatedData.likeCount);
+      setLikeStatus(data.data.likeStatus);
+      setLikeCount(data.data.likeCount);
     } catch (err) {
       console.error('추천 실패:', err);
     }
   };
 
-  const handleEdit = () => {
-    navigate(`/mypost/${id}`);
-  };
-
-  const handleDelete = async () => {
-    if (!window.confirm('정말 이 게시글을 삭제하시겠습니까?')) return;
+  // 댓글 좋아요
+  const handleCommentLike = async (commentId) => {
     try {
-      await axios.delete(
-        `http://218.51.41.52.nip.io:9600/api/boards/${id}?email=${email}`,
-        { headers: { Authorization: `Bearer ${token}` } }
+      const { data } = await axios.post(
+        `${API_BASE_URL}/api/comments/${commentId}/like`,
+        null,
+        {
+          params: { email },
+          headers: { Authorization: `Bearer ${token}` }
+        }
       );
-      alert('게시글이 삭제되었습니다.');
-      navigate('/community');
+      const updated = data.data.comment;
+      // 업데이트된 좋아요 상태를 comments 배열에 반영
+      setComments(prev =>
+        prev.map(c =>
+          c.id === commentId
+            ? { ...c, likeCount: updated.likeCount, liked: updated.liked }
+            : c
+        )
+      );
     } catch (err) {
-      console.error('삭제 실패:', err);
-      alert('게시글 삭제에 실패했습니다.');
+      console.error('댓글 좋아요 실패:', err);
     }
   };
 
+  // 댓글 작성
   const handleCommentSubmit = async () => {
     if (!commentText.trim()) return;
     try {
       await axios.post(
-        `http://218.51.41.52.nip.io:9600/api/comments?email=${email}`,
+        `${API_BASE_URL}/api/comments`,
         { boardId: id, content: commentText },
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          params: { email },
+          headers: { Authorization: `Bearer ${token}` }
+        }
       );
       setCommentText('');
-      setRefreshTrigger(prev => prev + 1);
+      setRefreshTrigger(n => n + 1);
     } catch (err) {
       console.error('댓글 작성 실패:', err);
       alert('댓글 작성에 실패했습니다.');
@@ -124,6 +145,7 @@ const Post = () => {
       <div className="post-wrapper">
         <div className="post-container">
           <div className="post-content-area">
+            {/* 게시글 헤더 */}
             <div className="post-detail-header" style={{ position: 'relative' }}>
               <div>
                 <h3>{post.title}</h3>
@@ -141,53 +163,83 @@ const Post = () => {
                   </button>
                   {showMenu && (
                     <div className="dropdown-menu">
-                      <div className="dropdown-item" onClick={handleEdit}>✏️ 수정</div>
-                      <div className="dropdown-item" onClick={handleDelete}>🗑️ 삭제</div>
+                      <div className="dropdown-item" onClick={() => navigate(`/mypost/${id}`)}>
+                        ✏️ 수정
+                      </div>
+                      <div className="dropdown-item" onClick={async () => {
+                        if (!window.confirm('정말 삭제할까요?')) return;
+                        await axios.delete(
+                          `${API_BASE_URL}/api/boards/${id}`,
+                          {
+                            params: { email },
+                            headers: { Authorization: `Bearer ${token}` }
+                          }
+                        );
+                        alert('삭제되었습니다.');
+                        navigate('/community');
+                      }}>
+                        🗑️ 삭제
+                      </div>
                     </div>
                   )}
                 </div>
               )}
             </div>
 
+            {/* 게시글 본문 */}
             <p className="post-detail-body">{post.content}</p>
 
+            {/* 게시글 좋아요 & 댓글 수 */}
             <div className="post-detail-footer">
-              <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={handleLike}>
+              <div className="like-btn" onClick={handleLike} style={{ cursor: 'pointer' }}>
                 <FaHeart
                   style={{
                     color: likeStatus === 'LIKE' ? 'red' : '#aaa',
-                    fontSize: '14px',
-                    marginRight: '4px',
-                    position: 'relative',
+                    marginRight: '4px'
                   }}
                 />
                 <span>추천 {likeCount}</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', marginLeft: '1rem' }}>
-                <span style={{ fontSize: '14px', color: '#888', marginRight: '4px' }}>💬</span>
-                <span>댓글 {totalComments}</span>
+              <div style={{ marginLeft: '1rem', color: '#888' }}>
+                💬 댓글 {totalComments}
               </div>
             </div>
           </div>
 
+          {/* 댓글 리스트 */}
           <div className="comment-section">
             {comments.length === 0 ? (
-              <p style={{ color: '#999', fontSize: '14px', padding: '1rem' }}>아직 작성된 댓글이 없습니다.</p>
+              <p style={{ color: '#999', padding: '1rem' }}>
+                아직 작성된 댓글이 없습니다.
+              </p>
             ) : (
               comments.map(comment => (
                 <div className="comment" key={comment.id}>
-                  <p className="comment-meta">{comment.writerDepartment}</p>
-                  <p>{comment.content}</p>
-                  <p className="comment-submeta">
+                  <p className="comment-meta">
+                    {comment.writerDepartment} ·{' '}
                     {new Date(comment.createdAt).toLocaleString()}
                   </p>
+                  <p>{comment.content}</p>
+                  <div
+                    className="comment-like-btn"
+                    onClick={() => handleCommentLike(comment.id)}
+                    style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', marginTop: '4px' }}
+                  >
+                    <FaHeart
+                      style={{
+                        color: comment.liked ? 'red' : '#aaa',
+                        marginRight: '4px'
+                      }}
+                    />
+                    <span>{comment.likeCount}</span>
+                  </div>
                 </div>
               ))
             )}
           </div>
         </div>
 
-        {/* ✅ 댓글 입력창은 post-container 밖에 위치 */}
+        {/* 댓글 입력창 */}
         <div className="comment-input">
           <input
             type="text"
