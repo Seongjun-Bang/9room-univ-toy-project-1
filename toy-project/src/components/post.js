@@ -1,3 +1,4 @@
+// Post.js (요약된 코드, 전체 복사해도 무방)
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './css/post.css';
@@ -19,6 +20,9 @@ const Post = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [isMyPost, setIsMyPost] = useState(false);
   const [commentText, setCommentText] = useState('');
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editingCommentContent, setEditingCommentContent] = useState('');
+  const [activeDropdownId, setActiveDropdownId] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const token = localStorage.getItem('token');
@@ -40,7 +44,6 @@ const Post = () => {
         setLikeCount(data.likeCount);
         setIsMyPost(String(data.writerId) === String(myId));
       } catch (err) {
-        console.error('게시글 조회 실패:', err);
         setError('게시글을 불러오지 못했습니다.');
       }
     };
@@ -54,8 +57,7 @@ const Post = () => {
         const data = res.data.data;
         setComments(Array.isArray(data.comments) ? data.comments : []);
         setTotalComments(data.totalComments || 0);
-      } catch (err) {
-        console.error('댓글 조회 실패:', err);
+      } catch {
         setComments([]);
         setTotalComments(0);
       }
@@ -75,14 +77,10 @@ const Post = () => {
       const updatedData = response.data.data;
       setLikeStatus(updatedData.likeStatus);
       setLikeCount(updatedData.likeCount);
-    } catch (err) {
-      console.error('추천 실패:', err);
-    }
+    } catch {}
   };
 
-  const handleEdit = () => {
-    navigate(`/mypost/${id}`);
-  };
+  const handleEdit = () => navigate(`/mypost/${id}`);
 
   const handleDelete = async () => {
     if (!window.confirm('정말 이 게시글을 삭제하시겠습니까?')) return;
@@ -93,8 +91,7 @@ const Post = () => {
       );
       alert('게시글이 삭제되었습니다.');
       navigate('/community');
-    } catch (err) {
-      console.error('삭제 실패:', err);
+    } catch {
       alert('게시글 삭제에 실패했습니다.');
     }
   };
@@ -109,14 +106,41 @@ const Post = () => {
       );
       setCommentText('');
       setRefreshTrigger(prev => prev + 1);
-    } catch (err) {
-      console.error('댓글 작성 실패:', err);
+    } catch {
       alert('댓글 작성에 실패했습니다.');
     }
   };
 
-  if (error) return <p className="error-message">{error}</p>;
-  if (!post) return <p className="loading">게시글을 불러오는 중...</p>;
+  const handleCommentUpdate = async (commentId) => {
+    if (!editingCommentContent.trim()) return;
+    try {
+      await axios.put(
+        `http://218.51.41.52.nip.io:9600/api/comments/${commentId}?email=${email}`,
+        { content: editingCommentContent },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setEditingCommentId(null);
+      setRefreshTrigger(prev => prev + 1);
+    } catch {
+      alert('댓글 수정에 실패했습니다.');
+    }
+  };
+
+  const handleCommentDelete = async (commentId) => {
+    if (!window.confirm('댓글을 삭제하시겠습니까?')) return;
+    try {
+      await axios.delete(
+        `http://218.51.41.52.nip.io:9600/api/comments/${commentId}?email=${email}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setRefreshTrigger(prev => prev + 1);
+    } catch {
+      alert('댓글 삭제 실패');
+    }
+  };
+
+  if (error) return <p>{error}</p>;
+  if (!post) return <p>로딩 중...</p>;
 
   return (
     <>
@@ -133,10 +157,7 @@ const Post = () => {
               </div>
               {isMyPost && (
                 <div style={{ position: 'absolute', top: 0, right: 0 }}>
-                  <button
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px' }}
-                    onClick={() => setShowMenu(prev => !prev)}
-                  >
+                  <button onClick={() => setShowMenu(prev => !prev)}>
                     <BsThreeDotsVertical />
                   </button>
                   {showMenu && (
@@ -148,46 +169,63 @@ const Post = () => {
                 </div>
               )}
             </div>
-
             <p className="post-detail-body">{post.content}</p>
 
             <div className="post-detail-footer">
-              <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={handleLike}>
-                <FaHeart
-                  style={{
-                    color: likeStatus === 'LIKE' ? 'red' : '#aaa',
-                    fontSize: '14px',
-                    marginRight: '4px',
-                    position: 'relative',
-                  }}
-                />
+              <div onClick={handleLike} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                <FaHeart style={{ color: likeStatus === 'LIKE' ? 'red' : '#aaa', marginRight: 4 }} />
                 <span>추천 {likeCount}</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', marginLeft: '1rem' }}>
-                <span style={{ fontSize: '14px', color: '#888', marginRight: '4px' }}>💬</span>
-                <span>댓글 {totalComments}</span>
-              </div>
+              <div style={{ marginLeft: '1rem' }}>💬 댓글 {totalComments}</div>
             </div>
           </div>
 
           <div className="comment-section">
-            {comments.length === 0 ? (
-              <p style={{ color: '#999', fontSize: '14px', padding: '1rem' }}>아직 작성된 댓글이 없습니다.</p>
-            ) : (
-              comments.map(comment => (
-                <div className="comment" key={comment.id}>
-                  <p className="comment-meta">{comment.writerDepartment}</p>
-                  <p>{comment.content}</p>
-                  <p className="comment-submeta">
-                    {new Date(comment.createdAt).toLocaleString()}
-                  </p>
-                </div>
-              ))
-            )}
+            {comments.map((comment) => (
+              <div className="comment" key={comment.id} style={{ position: 'relative' }}>
+                <p className="comment-meta">{comment.writerDepartment}</p>
+
+                {editingCommentId === comment.id ? (
+                  <div className="comment-edit-area">
+                    <input
+                      value={editingCommentContent}
+                      onChange={(e) => setEditingCommentContent(e.target.value)}
+                      style={{ width: '70%' }}
+                    />
+                    <button onClick={() => handleCommentUpdate(comment.id)}>수정</button>
+                  </div>
+                ) : (
+                  <>
+                    <p>{comment.content}</p>
+                    <p className="comment-submeta">{new Date(comment.createdAt).toLocaleString()}</p>
+                  </>
+                )}
+
+                {String(comment.writerId) === String(myId) && (
+                  <div style={{ position: 'absolute', top: 0, right: 0 }}>
+                    <button
+                      onClick={() => setActiveDropdownId(prev => prev === comment.id ? null : comment.id)}
+                      style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+                    >
+                      <BsThreeDotsVertical />
+                    </button>
+                    {activeDropdownId === comment.id && (
+                      <div className="dropdown-menu">
+                        <div className="dropdown-item" onClick={() => {
+                          setEditingCommentId(comment.id);
+                          setEditingCommentContent(comment.content);
+                          setActiveDropdownId(null);
+                        }}>✏️ 수정</div>
+                        <div className="dropdown-item" onClick={() => handleCommentDelete(comment.id)}>🗑️ 삭제</div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* ✅ 댓글 입력창은 post-container 밖에 위치 */}
         <div className="comment-input">
           <input
             type="text"
@@ -195,9 +233,7 @@ const Post = () => {
             value={commentText}
             onChange={e => setCommentText(e.target.value)}
           />
-          <button onClick={handleCommentSubmit}>
-            <FaPaperPlane />
-          </button>
+          <button onClick={handleCommentSubmit}><FaPaperPlane /></button>
         </div>
       </div>
     </>
