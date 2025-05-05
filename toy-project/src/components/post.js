@@ -1,4 +1,3 @@
-// src/Post.js
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './css/post.css';
@@ -25,47 +24,42 @@ const Post = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [isMyPost, setIsMyPost] = useState(false);
   const [commentText, setCommentText] = useState('');
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editingCommentContent, setEditingCommentContent] = useState('');
+  const [activeDropdownId, setActiveDropdownId] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const handleBack = () => navigate('/community');
 
   useEffect(() => {
-    // 게시글 가져오기
     const fetchPost = async () => {
       try {
-        const { data } = await axios.get(
-          `${API_BASE_URL}/api/boards/${id}`,
-          {
-            params: { email },
-            headers: { Authorization: `Bearer ${token}` }
-          }
-        );
+        const { data } = await axios.get(`${API_BASE_URL}/api/boards/${id}`, {
+          params: { email },
+          headers: { Authorization: `Bearer ${token}` },
+        });
         const pd = data.data;
         setPost(pd);
         setLikeStatus(pd.likeStatus);
         setLikeCount(pd.likeCount);
         setIsMyPost(String(pd.writerId) === String(myId));
       } catch (err) {
-        console.error('게시글 조회 실패:', err);
-        setError('게시글을 불러오는 중 오류가 발생했습니다.');
+        setError('게시글을 불러오지 못했습니다.');
       }
     };
 
-    // 댓글 가져오기
     const fetchComments = async () => {
       try {
-        const { data } = await axios.get(
-          `${API_BASE_URL}/api/comments/board/${id}`,
-          {
-            params: { email },
-            headers: { Authorization: `Bearer ${token}` }
-          }
-        );
+        const { data } = await axios.get(`${API_BASE_URL}/api/comments/board/${id}`, {
+          params: { email },
+          headers: { Authorization: `Bearer ${token}` },
+        });
         const cd = data.data;
         setComments(cd.comments || []);
         setTotalComments(cd.totalComments || 0);
       } catch (err) {
-        console.error('댓글 조회 실패:', err);
+        setComments([]);
+        setTotalComments(0);
       }
     };
 
@@ -73,17 +67,12 @@ const Post = () => {
     fetchComments();
   }, [id, email, token, myId, refreshTrigger]);
 
-  // 게시글 좋아요
   const handleLike = async () => {
     try {
-      const { data } = await axios.post(
-        `${API_BASE_URL}/api/boards/${id}/like`,
-        null,
-        {
-          params: { email },
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
+      const { data } = await axios.post(`${API_BASE_URL}/api/boards/${id}/like`, null, {
+        params: { email },
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setLikeStatus(data.data.likeStatus);
       setLikeCount(data.data.likeCount);
     } catch (err) {
@@ -91,24 +80,16 @@ const Post = () => {
     }
   };
 
-  // 댓글 좋아요
   const handleCommentLike = async (commentId) => {
     try {
-      const { data } = await axios.post(
-        `${API_BASE_URL}/api/comments/${commentId}/like`,
-        null,
-        {
-          params: { email },
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
+      const { data } = await axios.post(`${API_BASE_URL}/api/comments/${commentId}/like`, null, {
+        params: { email },
+        headers: { Authorization: `Bearer ${token}` },
+      });
       const updated = data.data.comment;
-      // 업데이트된 좋아요 상태를 comments 배열에 반영
       setComments(prev =>
         prev.map(c =>
-          c.id === commentId
-            ? { ...c, likeCount: updated.likeCount, liked: updated.liked }
-            : c
+          c.id === commentId ? { ...c, likeCount: updated.likeCount, liked: updated.liked } : c
         )
       );
     } catch (err) {
@@ -116,28 +97,49 @@ const Post = () => {
     }
   };
 
-  // 댓글 작성
   const handleCommentSubmit = async () => {
     if (!commentText.trim()) return;
     try {
-      await axios.post(
-        `${API_BASE_URL}/api/comments`,
-        { boardId: id, content: commentText },
-        {
-          params: { email },
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
+      await axios.post(`${API_BASE_URL}/api/comments`, { boardId: id, content: commentText }, {
+        params: { email },
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setCommentText('');
       setRefreshTrigger(n => n + 1);
     } catch (err) {
-      console.error('댓글 작성 실패:', err);
       alert('댓글 작성에 실패했습니다.');
     }
   };
 
-  if (error) return <p className="error-message">{error}</p>;
-  if (!post) return <p className="loading">게시글을 불러오는 중...</p>;
+  const handleCommentUpdate = async (commentId) => {
+    if (!editingCommentContent.trim()) return;
+    try {
+      await axios.put(`${API_BASE_URL}/api/comments/${commentId}`, { content: editingCommentContent }, {
+        params: { email },
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setEditingCommentId(null);
+      setRefreshTrigger(n => n + 1);
+    } catch {
+      alert('댓글 수정에 실패했습니다.');
+    }
+  };
+
+  const handleCommentDelete = async (commentId) => {
+    if (!window.confirm('댓글을 삭제하시겠습니까?')) return;
+    try {
+      await axios.delete(`${API_BASE_URL}/api/comments/${commentId}`, {
+        params: { email },
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setRefreshTrigger(n => n + 1);
+    } catch {
+      alert('댓글 삭제 실패');
+    }
+  };
+
+  if (error) return <p>{error}</p>;
+  if (!post) return <p>로딩 중...</p>;
 
   return (
     <>
@@ -145,7 +147,6 @@ const Post = () => {
       <div className="post-wrapper">
         <div className="post-container">
           <div className="post-content-area">
-            {/* 게시글 헤더 */}
             <div className="post-detail-header" style={{ position: 'relative' }}>
               <div>
                 <h3>{post.title}</h3>
@@ -155,91 +156,84 @@ const Post = () => {
               </div>
               {isMyPost && (
                 <div style={{ position: 'absolute', top: 0, right: 0 }}>
-                  <button
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px' }}
-                    onClick={() => setShowMenu(prev => !prev)}
-                  >
-                    <BsThreeDotsVertical />
+                  <button style={{ background: 'transparent', border: 'none', cursor: 'pointer' }} onClick={() => setShowMenu(p => !p)}>
+                    <BsThreeDotsVertical size={20} />
                   </button>
                   {showMenu && (
                     <div className="dropdown-menu">
-                      <div className="dropdown-item" onClick={() => navigate(`/mypost/${id}`)}>
-                        ✏️ 수정
-                      </div>
+                      <div className="dropdown-item" onClick={() => navigate(`/mypost/${id}`)}>✏️ 수정</div>
                       <div className="dropdown-item" onClick={async () => {
                         if (!window.confirm('정말 삭제할까요?')) return;
-                        await axios.delete(
-                          `${API_BASE_URL}/api/boards/${id}`,
-                          {
-                            params: { email },
-                            headers: { Authorization: `Bearer ${token}` }
-                          }
-                        );
+                        await axios.delete(`${API_BASE_URL}/api/boards/${id}`, {
+                          params: { email },
+                          headers: { Authorization: `Bearer ${token}` },
+                        });
                         alert('삭제되었습니다.');
                         navigate('/community');
-                      }}>
-                        🗑️ 삭제
-                      </div>
+                      }}>🗑️ 삭제</div>
                     </div>
                   )}
                 </div>
               )}
             </div>
-
-            {/* 게시글 본문 */}
             <p className="post-detail-body">{post.content}</p>
-
-            {/* 게시글 좋아요 & 댓글 수 */}
             <div className="post-detail-footer">
-              <div className="like-btn" onClick={handleLike} style={{ cursor: 'pointer' }}>
-                <FaHeart
-                  style={{
-                    color: likeStatus === 'LIKE' ? 'red' : '#aaa',
-                    marginRight: '4px'
-                  }}
-                />
+              <div onClick={handleLike} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                <FaHeart style={{ color: likeStatus === 'LIKE' ? 'red' : '#aaa', marginRight: 4 }} />
                 <span>추천 {likeCount}</span>
               </div>
-              <div style={{ marginLeft: '1rem', color: '#888' }}>
-                💬 댓글 {totalComments}
-              </div>
+              <div style={{ marginLeft: '1rem' }}>💬 댓글 {totalComments}</div>
             </div>
           </div>
 
-          {/* 댓글 리스트 */}
           <div className="comment-section">
             {comments.length === 0 ? (
-              <p style={{ color: '#999', padding: '1rem' }}>
-                아직 작성된 댓글이 없습니다.
-              </p>
+              <p style={{ color: '#999', fontSize: '14px', padding: '1rem' }}>아직 작성된 댓글이 없습니다.</p>
             ) : (
               comments.map(comment => (
-                <div className="comment" key={comment.id}>
-                  <p className="comment-meta">
-                    {comment.writerDepartment} ·{' '}
-                    {new Date(comment.createdAt).toLocaleString()}
-                  </p>
-                  <p>{comment.content}</p>
-                  <div
-                    className="comment-like-btn"
-                    onClick={() => handleCommentLike(comment.id)}
-                    style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', marginTop: '4px' }}
-                  >
-                    <FaHeart
-                      style={{
-                        color: comment.liked ? 'red' : '#aaa',
-                        marginRight: '4px'
-                      }}
-                    />
-                    <span>{comment.likeCount}</span>
-                  </div>
+                <div className="comment" key={comment.id} style={{ position: 'relative' }}>
+                  <p className="comment-meta">{comment.writerDepartment}</p>
+                  {editingCommentId === comment.id ? (
+                    <div className="comment-edit-area">
+                      <input
+                        value={editingCommentContent}
+                        onChange={e => setEditingCommentContent(e.target.value)}
+                        style={{ width: '70%' }}
+                      />
+                      <button onClick={() => handleCommentUpdate(comment.id)}>수정</button>
+                    </div>
+                  ) : (
+                    <>
+                      <p>{comment.content}</p>
+                      <p className="comment-submeta">{new Date(comment.createdAt).toLocaleString()}</p>
+                      <div className="comment-like-btn" onClick={() => handleCommentLike(comment.id)} style={{ cursor: 'pointer' }}>
+                        <FaHeart style={{ color: comment.liked ? 'red' : '#aaa', marginRight: 4 }} />
+                        <span>{comment.likeCount}</span>
+                      </div>
+                    </>
+                  )}
+                  {String(comment.writerId) === String(myId) && (
+                    <div style={{ position: 'absolute', top: 0, right: 0 }}>
+                      <button style={{ background: 'transparent', border: 'none', cursor: 'pointer' }} onClick={() => setActiveDropdownId(p => p === comment.id ? null : comment.id)}>
+                        <BsThreeDotsVertical size={16} />
+                      </button>
+                      {activeDropdownId === comment.id && (
+                        <div className="dropdown-menu">
+                          <div className="dropdown-item" onClick={() => {
+                            setEditingCommentId(comment.id);
+                            setEditingCommentContent(comment.content);
+                            setActiveDropdownId(null);
+                          }}>✏️ 수정</div>
+                          <div className="dropdown-item" onClick={() => handleCommentDelete(comment.id)}>🗑️ 삭제</div>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               ))
             )}
           </div>
         </div>
-
-        {/* 댓글 입력창 */}
         <div className="comment-input">
           <input
             type="text"
@@ -247,9 +241,7 @@ const Post = () => {
             value={commentText}
             onChange={e => setCommentText(e.target.value)}
           />
-          <button onClick={handleCommentSubmit}>
-            <FaPaperPlane />
-          </button>
+          <button onClick={handleCommentSubmit}><FaPaperPlane /></button>
         </div>
       </div>
     </>
