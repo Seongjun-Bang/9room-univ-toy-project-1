@@ -156,9 +156,7 @@ const Post = () => {
               </div>
               {isMyPost && (
                 <div style={{ position: 'absolute', top: 0, right: 0 }}>
-                  <button style={{ background: 'transparent', border: 'none', cursor: 'pointer' }} onClick={() => setShowMenu(p => !p)}>
-                    <BsThreeDotsVertical size={20} />
-                  </button>
+                  <button style={{ background: 'none', border: 'none', cursor: 'pointer' }} onClick={() => setShowMenu(p => !p)}><BsThreeDotsVertical /></button>
                   {showMenu && (
                     <div className="dropdown-menu">
                       <div className="dropdown-item" onClick={() => navigate(`/mypost/${id}`)}>✏️ 수정</div>
@@ -194,13 +192,41 @@ const Post = () => {
                 <div className="comment" key={comment.id} style={{ position: 'relative' }}>
                   <p className="comment-meta">{comment.writerDepartment}</p>
                   {editingCommentId === comment.id ? (
-                    <div className="comment-edit-area">
+                    <div style={{
+                      position: 'absolute',
+                      top: '24px', right: 0,
+                      background: '#FEFBF5',
+                      border: '1px solid #f0e6dd',
+                      borderRadius: '20px',
+                      padding: '0.5rem 1rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      width: 'calc(100% - 40px)',
+                      maxWidth: '360px',
+                      zIndex: 1000,
+                    }}>
                       <input
                         value={editingCommentContent}
                         onChange={e => setEditingCommentContent(e.target.value)}
-                        style={{ width: '70%' }}
+                        style={{
+                          flex: 1,
+                          border: 'none',
+                          background: 'transparent',
+                          fontSize: '0.9rem',
+                          padding: '0.5rem',
+                          outline: 'none'
+                        }}
                       />
-                      <button onClick={() => handleCommentUpdate(comment.id)}>수정</button>
+                      <button onClick={() => handleCommentUpdate(comment.id)} style={{
+                        background: 'none',
+                        border: 'none',
+                        fontSize: '1.2rem',
+                        color: '#b04b1f',
+                        cursor: 'pointer',
+                        marginLeft: '0.5rem'
+                      }}>
+                        <FaPaperPlane />
+                      </button>
                     </div>
                   ) : (
                     <>
@@ -213,9 +239,9 @@ const Post = () => {
                     </>
                   )}
                   {String(comment.writerId) === String(myId) && (
-                    <div style={{ position: 'absolute', top: 0, right: 0 }}>
-                      <button style={{ background: 'transparent', border: 'none', cursor: 'pointer' }} onClick={() => setActiveDropdownId(p => p === comment.id ? null : comment.id)}>
-                        <BsThreeDotsVertical size={16} />
+                    <div style={{ position: 'absolute', top: 25, right: 0 }}>
+                      <button style={{ background: 'none', border: 'none', cursor: 'pointer' }} onClick={() => setActiveDropdownId(p => p === comment.id ? null : comment.id)}>
+                        <BsThreeDotsVertical />
                       </button>
                       {activeDropdownId === comment.id && (
                         <div className="dropdown-menu">
