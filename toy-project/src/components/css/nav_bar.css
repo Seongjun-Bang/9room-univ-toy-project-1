@@ -1,6 +1,8 @@
 .nav-bar {
   position: fixed;
-  bottom: 0;
+  bottom: 45px;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
   left: 50%;                   /* 🔥 가운데 정렬 시작 */
   transform: translateX(-50%); /* 🔥 정확히 가운데로 보정 */
   width: 400px;

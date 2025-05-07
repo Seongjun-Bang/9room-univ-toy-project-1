@@ -108,12 +108,26 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  border: 2px solid red;
+  max-height: 350px;   /* 스크롤 영역 높이 (원하는 값으로 조정) */
+  overflow-y: auto;    /* 내용이 넘치면 세로 스크롤 허용 */
+  padding-right: 4px;  /* 스크롤바가 내용에 겹치지 않도록 여백 */
+    /* IE, Edge */
+    -ms-overflow-style: none;
+    /* Firefox */
+    scrollbar-width: none;
+}
+
+/* Chrome, Safari, Opera */
+.lab-list::-webkit-scrollbar {
+  display: none;
 }
 
 .lab-card {
   background-color: #fdfbf7;
   border-radius: 16px;
-  padding: 16px;
+  padding: 5px 0px 8px 18px;
+
 }
 
 .lab-card strong {
@@ -125,5 +139,103 @@
 .lab-card p {
   font-size: 13px;
   color: #555;
-  margin-top: 6px;
+}
+
+.report{
+    background-color: #ffece1;
+    border-radius: 24px;
+    height: 35px;
+    width: 100%;
+    background-color: #f3e8d3;
+    border: none;
+    border-radius: 24px;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+/* ===================== */
+/* 모달 스타일 */
+/* ===================== */
+
+/* 어두운 배경 */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* 모달 박스 */
+.modal-content {
+  background: #fff;
+  width: 300px;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modal-content h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  text-align: center;
+}
+
+.modal-content textarea {
+  width: 100%;
+  resize: none;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* 모달 버튼 그룹 */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.modal-actions button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: #C43F28;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal-actions button:last-child {
+  background: #888;
+}
+
+/* 라벨과 입력창을 세로 정렬하는 그룹 스타일 */
+.modal-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;       /* 라벨과 입력창 사이 여백 */
+  margin-bottom: 0.5rem; /* 그룹 간 여백 */
+}
+
+/* 라벨 하단에 여백 주기 */
+.modal-input-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+/* 입력창은 그룹 너비 가득 채우기 */
+.modal-input-group input {
+  width: 100%;
+  box-sizing: border-box;
+  height: 40px;
+  border-radius: 8px;  
+  border: 1px solid grey;
 }

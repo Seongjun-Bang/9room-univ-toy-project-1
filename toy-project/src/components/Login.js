@@ -84,25 +84,14 @@ function Login() {
         </div>
 
         <div className="sns-divider">
-          <span>SNS 계정으로 로그인</span>
+          <span>Google 계정으로 로그인</span>
         </div>
 
         <div className="sns-icons">
           <button onClick={handleGoogleLogin} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
             <img src={GoogleLogo} alt="google" />
           </button>
-          <button style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-            <img src={TwitterLogo} alt="twitter" />
-          </button>
-          <button style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-            <img src={AppleLogo} alt="apple" />
-          </button>
-          <button style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-            <img src={MessengerLogo} alt="message" />
-          </button>
-          <button style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-            <img src={FacebookLogo} alt="facebook" />
-          </button>
+    
         </div>
       </div>
     </div>

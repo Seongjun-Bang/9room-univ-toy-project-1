@@ -5,6 +5,8 @@ import './css/main.css';
 import PinIcon from '../assets/Pin.svg';
 import NavBar from './nav_bar';
 import { useNavigate } from 'react-router-dom';
+import Header from './Header'
+import { SlUser } from 'react-icons/sl';
 
 const API_BASE_URL = 'http://218.51.41.52.nip.io:9600';
 
@@ -46,12 +48,19 @@ export default function Main() {
     fetchPopular();
   }, [token, email]);
 
+    // 프로필 클릭 시 마이페이지로 이동
+    const goToMyPage = () => {
+      navigate('/UserManagementPage');
+    };
+
   return (
     <>
-      <div className="header-container">
-        <h2 className="header-title">학과사전</h2>
-      </div>
-      <hr className="write-divider" />
+    <Header
+        title="학과사전"
+        buttonLabel={<SlUser size={20} />}
+        onButtonClick={goToMyPage}
+      />
+
 
       <div className="home-container">
         <section className="section">
@@ -91,10 +100,6 @@ export default function Main() {
               <strong>컴퓨터공학과</strong>
               <p>공대 다동 4층 A411호</p>
             </div>
-          </div>
-          <div className="links-row">
-            <a href="/SignUpOCR">OCR인증</a>
-            <a href="/UserManagementPage">사용자 페이지</a>
           </div>
         </section>
 
