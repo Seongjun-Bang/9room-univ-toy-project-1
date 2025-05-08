@@ -11,7 +11,10 @@ const Header = ({ title = '', onClose, buttonLabel, onButtonClick }) => {
       <div className="header-wrapper">
         <div className="header-container">
           
-          
+          {/* 왼쪽 버튼 */}
+          <button className="header-close" onClick={onClose}>
+          <SlArrowLeft />
+        </button>
 
           {/* 가운데 타이틀 */}
           <h2 className="header-title">{title}</h2>

@@ -1,7 +1,7 @@
 .post-wrapper {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 99%;
   width: 400px;
   margin: auto;
   position: relative; /* 하단 입력창과 분리 */
@@ -16,6 +16,7 @@
   flex-direction: column;
   background-color: #fff;
   margin-bottom: 165px; /* 댓글 입력창 영역 확보 */
+
 }
 
 

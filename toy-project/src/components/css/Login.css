@@ -1,8 +1,14 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  margin-top:20px;
+  height: 100%;   
 }
 
 .login-box {

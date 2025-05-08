@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './css/LabLocation.css';
 import NavBar from './nav_bar';
 import Header from './Header';
+import { useNavigate } from 'react-router-dom';
 
 function LabLocation() {
   const allLabs = [
@@ -9,19 +10,22 @@ function LabLocation() {
     { major: '스마트 모빌리티', location: '공대 5층 B109호' },
     { major: '컴퓨터공학과', location: '공대 다동 4층 A119호' },
     { major: '기계공학과', location: '공대 다동 1층 B109호' },
-    { major: '산업경영공학과', location: '공대 나동 2층 A213호' },
-    { major: '산업경영공학과', location: '공대 나동 2층 A213호' },
-    { major: '산업경영공학과', location: '공대 나동 2층 A213호' },
+    { major: '전자공학과', location: '공대 다동 3층' },
+    { major: '자율전공', location: '인문학관 5층 상담실' },
+    { major: '공학자율학부', location: '공대 나동 1층' }
   ];
 
   const majors = [...new Set(allLabs.map(lab => lab.major))];
   const [searchText, setSearchText] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
   const [showModal, setShowModal] = useState(false);
 
+  
   const [reportMajor, setReportMajor] = useState('');
   const [reportLocation, setReportLocation] = useState('');
 
+  const navigate = useNavigate();
 
   const filteredMajors = majors.filter(major =>
     major.toLowerCase().includes(searchText.toLowerCase())
@@ -32,9 +36,11 @@ function LabLocation() {
       )
     : allLabs;
 
+    const handleBack = () => navigate('/main');
+
   return (
     <>
-      <Header title="우리 과방 위치는?" />
+      <Header title="우리 과방 위치는?" onClose={handleBack} />
 
       <div className="lab-page">
         {/* 전공 선택 드롭다운 */}
@@ -121,7 +127,7 @@ function LabLocation() {
           >
             <h2>📝 과방 제보하기</h2>
                  {/* 학과 입력 */}
-                 <div className="modal-input-group">
+                <div className="modal-input-group">
               <label>학과</label>
               <input
                 type="text"

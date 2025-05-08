@@ -1,7 +1,21 @@
+/* 1) html 요소가 화면 전체 높이를 가지도록 */
+html {
+  height: 100%;
+  margin: 0;
+}
+
+/* 2) body 요소를 카드 컨테이너로 두고 절대위치 + transform 으로 중앙정렬 */
 body {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
   width: 400px;
-  margin: 35px auto;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   height: 650px;
+  margin: 0;                /* 기존 35px auto 제거 */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 24px;
+  background: white;        /* 필요시 배경색 지정 */
+  overflow: hidden;         /* 내부 오버플로우 숨김 (선택) */
 }

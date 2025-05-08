@@ -57,6 +57,7 @@ const Write = () => {
         onClose={handleBack}
         buttonLabel="완료"
         onButtonClick={handleSubmit}
+        className="write-done"
       />
       <div className="write-container">
         <div className="write-form">

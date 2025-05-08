@@ -1,6 +1,6 @@
 .nav-bar {
   position: fixed;
-  bottom: 45px;
+  bottom: 0px;
   border-bottom-left-radius: 24px;
   border-bottom-right-radius: 24px;
   left: 50%;                   /* 🔥 가운데 정렬 시작 */

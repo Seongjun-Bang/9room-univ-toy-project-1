@@ -32,7 +32,7 @@
   border: none;
   font-size: 1rem;
   cursor: pointer;
-  margin-left: auto;
+  margin-left: 20px;
 }
 
 .header-button svg{
