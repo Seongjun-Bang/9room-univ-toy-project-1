@@ -1,6 +1,6 @@
 import React from 'react';
-//import './css/Header.css';
-import './css/header.css';
+import './css/Header.css';
+//import './css/header.css';
 import { SlArrowLeft } from "react-icons/sl";
 
 
