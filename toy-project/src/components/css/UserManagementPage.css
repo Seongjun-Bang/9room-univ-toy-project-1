@@ -15,6 +15,8 @@
   padding-bottom: 8px;
   border-bottom: 4px solid #C63A3A; /* 메인 컬러 */
   color: #333;
+
+
 }
 
 .section-box {
@@ -29,8 +31,9 @@
   gap: 4px;
 }
 .info-row label {
-  font-size: 0.875rem;
   color: #555;
+  font-size: 14px;
+  font-weight: bold;
 }
 .info-row span,
 .info-row input {
@@ -66,5 +69,13 @@
 }
 
 .verify {
-  color: #C63A3A;
+  background-color: #ffe0c0;
+  border-radius: 24px;
+  height: 35px;
+  width: 100%;
+  background-color: #ffe0c0;
+  border: none;
+  border-radius: 24px;
+  font-size: 15px;
+  cursor: pointer;
 }

@@ -77,7 +77,7 @@ function Register() {
       <div className="register-container">
         <form className="register-form" onSubmit={handleSubmit}>
           <label>
-            이메일
+            이메일<br/>
             <input
               type="email"
               name="email"
@@ -88,7 +88,7 @@ function Register() {
           </label>
 
           <label>
-            비밀번호
+            비밀번호<br/>
             <input
               type="password"
               name="password"
@@ -99,7 +99,7 @@ function Register() {
           </label>
 
           <label>
-            비밀번호 재입력
+            비밀번호 재입력<br/>
             <input
               type="password"
               name="confirmPassword"
@@ -110,7 +110,7 @@ function Register() {
           </label>
 
           <label>
-            닉네임
+            이름<br/>
             <input
               type="text"
               name="name"
@@ -121,7 +121,7 @@ function Register() {
           </label>
 
           <label>
-            학과
+            학과<br/>
             <input
               type="text"
               name="department"

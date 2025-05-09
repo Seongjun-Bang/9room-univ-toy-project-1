@@ -11,7 +11,7 @@ import SignUpOCR from './components/SignUpOCR';
 import Register from './components/Register';
 import OAuth2RedirectHandler from './components/OAuth2RedirectHandler'; // ✅ 추가
 import UserManagementPage from './components/UserManagementPage'; // ✅ 추가
-
+import './App.css'; // ✅ 추가
 
 function App() {
   return (

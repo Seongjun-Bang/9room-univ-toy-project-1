@@ -116,7 +116,7 @@ const Community = () => {
               </div>
               <div className="post-title">{post.title}</div>
               <div className="post-preview">
-                조회수: {post.viewCount ?? 0}
+                조회수: {post.viewCount /2  ?? 0}
               </div>
               <div className="post-footer">
                 <div className="post-icons">
