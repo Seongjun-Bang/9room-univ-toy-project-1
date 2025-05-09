@@ -4,10 +4,24 @@ import { useNavigate } from 'react-router-dom';
 import './css/UserManagementPage.css';
 import Header from './Header';
 import NavBar from './nav_bar'; 
+import Modal from './Modal';
 
 const API_BASE_URL = 'http://218.51.41.52:9600';
 
 export default function UserManagementPage() {
+
+  // ✅ 모달 상태
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [onModalClose, setOnModalClose] = useState(() => () => {});
+
+  // ✅ 모달 표시 함수
+  const openModal = (message, onCloseCallback) => {
+    setModalMessage(message);
+    setOnModalClose(() => onCloseCallback); // 콜백 저장
+    setShowModal(true);
+  };
+
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
   const storedUser = localStorage.getItem('userInfo');
@@ -26,7 +40,8 @@ export default function UserManagementPage() {
 
   useEffect(() => {
     if (!token || !storedEmail) {
-      alert('로그인이 필요합니다.');
+      // alert('로그인이 필요합니다.');
+      openModal('로그인이 필요합니다.', () => {});
       navigate('/login');
       return;
     }
@@ -47,7 +62,9 @@ export default function UserManagementPage() {
       setUserInfo(data);
     } catch (err) {
       console.error('사용자 조회 실패', err);
-      alert('사용자 정보를 불러오는 데 실패했습니다.');
+      // alert('사용자 정보를 불러오는 데 실패했습니다.');
+      openModal('사용자 정보를 불러오는 데 실패했습니다.', () => {});
+
     }
   };
 
@@ -59,12 +76,14 @@ export default function UserManagementPage() {
         { name: userInfo.name, department: userInfo.department },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      alert('사용자 정보가 업데이트되었습니다.');
+      // alert('사용자 정보가 업데이트되었습니다.');
+      openModal('사용자 정보가 업데이트되었습니다.', () => {});
       setEditMode(false);
       fetchUserInfo(storedEmail);
     } catch (err) {
       console.error('사용자 정보 수정 실패', err);
-      alert('수정 중 오류가 발생했습니다.');
+      // alert('수정 중 오류가 발생했습니다.');
+      openModal('수정 중 오류가 발생했습니다.', () => {});
     }
   };
 
@@ -129,6 +148,16 @@ export default function UserManagementPage() {
         </section>
         <NavBar/>
       </div>
+      {/* ✅ 공통 모달 */}
+      {showModal && (
+        <Modal
+          message={modalMessage}
+          onClose={() => {
+            setShowModal(false);
+            onModalClose(); // 닫기 후 콜백 실행
+          }}
+        />
+      )}
     </>
   );
 }

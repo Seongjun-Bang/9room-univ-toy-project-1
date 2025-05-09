@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import './css/write.css';
 import Header from './Header';
+import Modal from './Modal'; // ✅ 모달 컴포넌트 import
 import axios from 'axios';
 
 const MyPost = () => {
@@ -14,8 +15,19 @@ const MyPost = () => {
   const token = localStorage.getItem('token');
   const email = localStorage.getItem('email');
 
+  // ✅ 모달 상태
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [onModalClose, setOnModalClose] = useState(() => () => {});
+
+  // ✅ 모달 표시 함수
+  const openModal = (message, onCloseCallback) => {
+    setModalMessage(message);
+    setOnModalClose(() => onCloseCallback); // 콜백 저장
+    setShowModal(true);
+  };
+
   useEffect(() => {
-    // 수정할 게시글 정보 불러오기
     const fetchPost = async () => {
       try {
         const res = await axios.get(`http://218.51.41.52.nip.io:9600/api/boards/${id}?email=${email}`, {
@@ -26,11 +38,10 @@ const MyPost = () => {
         const data = res.data.data;
         setTitle(data.title);
         setContent(data.content);
-        setCategory(data.category); // 수정 요청 시 그대로 사용
+        setCategory(data.category);
       } catch (err) {
         console.error('게시글 불러오기 실패:', err);
-        alert('게시글 정보를 불러오지 못했습니다.');
-        navigate(-1);
+        openModal('게시글 정보를 불러오지 못했습니다.', () => navigate(-1));
       }
     };
 
@@ -41,7 +52,7 @@ const MyPost = () => {
 
   const handleSubmit = async () => {
     if (!token) {
-      alert('로그인이 필요합니다.');
+      openModal('로그인이 필요합니다.', () => {});
       return;
     }
 
@@ -60,11 +71,10 @@ const MyPost = () => {
         }
       );
 
-      alert('게시글이 수정되었습니다!');
-      navigate(`/post/${id}`);
+      openModal('게시글이 수정되었습니다!', () => navigate(`/post/${id}`));
     } catch (error) {
       console.error('게시글 수정 실패:', error);
-      alert('게시글 수정에 실패했습니다.');
+      openModal('게시글 수정에 실패했습니다.', () => {});
     }
   };
 
@@ -93,6 +103,17 @@ const MyPost = () => {
           />
         </div>
       </div>
+
+      {/* ✅ 공통 모달 */}
+      {showModal && (
+        <Modal
+          message={modalMessage}
+          onClose={() => {
+            setShowModal(false);
+            onModalClose(); // 닫기 후 콜백 실행
+          }}
+        />
+      )}
     </>
   );
 };

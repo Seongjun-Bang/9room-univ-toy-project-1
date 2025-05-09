@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './css/write.css';
 import Header from './Header';
 import axios from 'axios';
+import Modal from './Modal'; 
 
 const CATEGORY_MAP = {
   '자유게시판': 'FREE',
@@ -16,6 +17,18 @@ const Write = () => {
   const [content, setContent] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('자유게시판');
 
+  // ✅ 모달 상태
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [onModalClose, setOnModalClose] = useState(() => () => {});
+
+  // ✅ 모달 표시 함수
+  const openModal = (message, onCloseCallback) => {
+    setModalMessage(message);
+    setOnModalClose(() => onCloseCallback); // 콜백 저장
+    setShowModal(true);
+  };
+
   const handleBack = () => navigate(-1);
 
   const handleSubmit = async () => {
@@ -23,7 +36,8 @@ const Write = () => {
     const email = localStorage.getItem('email');
 
     if (!token) {
-      alert('로그인이 필요합니다.');
+      // alert('로그인이 필요합니다.');
+      openModal('로그인이 필요합니다.', () => {});
       return;
     }
 
@@ -42,11 +56,14 @@ const Write = () => {
         }
       );
 
-      alert('게시글이 작성되었습니다!');
-      navigate('/community');
+      // alert('게시글이 작성되었습니다!');
+      openModal('게시글이 작성되었습니다!', () => {
+        navigate('/community');
+      });
     } catch (error) {
       console.error('게시글 작성 실패:', error);
-      alert('게시글 작성에 실패했습니다.');
+      // alert('게시글 작성에 실패했습니다.');
+      openModal('게시글 작성에 실패했습니다.', () => {});
     }
   };
 
@@ -89,6 +106,16 @@ const Write = () => {
           />
         </div>
       </div>
+        {/* ✅ 공통 모달 */}
+        {showModal && (
+          <Modal
+            message={modalMessage}
+            onClose={() => {
+            setShowModal(false);
+            onModalClose(); // 닫기 후 콜백 실행
+          }}
+        />
+      )}
     </>
   );
 };
