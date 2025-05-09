@@ -5,6 +5,8 @@ import Header from './Header';
 import axios from 'axios';
 import { FaPaperPlane, FaHeart } from 'react-icons/fa';
 import { BsThreeDotsVertical } from 'react-icons/bs';
+import Modal from './Modal'; 
+
 
 const API_BASE_URL = 'http://218.51.41.52.nip.io:9600';
 
@@ -28,6 +30,18 @@ const Post = () => {
   const [editingCommentContent, setEditingCommentContent] = useState('');
   const [activeDropdownId, setActiveDropdownId] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  // ✅ 모달 상태
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [onModalClose, setOnModalClose] = useState(() => () => {});
+
+  // ✅ 모달 표시 함수
+  const openModal = (message, onCloseCallback) => {
+    setModalMessage(message);
+    setOnModalClose(() => onCloseCallback); // 콜백 저장
+    setShowModal(true);
+  };
 
   const handleBack = () => navigate('/community');
 
@@ -107,7 +121,8 @@ const Post = () => {
       setCommentText('');
       setRefreshTrigger(n => n + 1);
     } catch (err) {
-      alert('댓글 작성에 실패했습니다.');
+      // alert('댓글 작성에 실패했습니다.');
+      openModal('댓글 작성에 실패했습니다.', () => {});
     }
   };
 
@@ -121,20 +136,23 @@ const Post = () => {
       setEditingCommentId(null);
       setRefreshTrigger(n => n + 1);
     } catch {
-      alert('댓글 수정에 실패했습니다.');
+      // alert('댓글 수정에 실패했습니다.');
+      openModal('댓글 수정에 실패했습니다.', () => {});
     }
   };
 
   const handleCommentDelete = async (commentId) => {
-    if (!window.confirm('댓글을 삭제하시겠습니까?')) return;
+    // if (!window.confirm('댓글을 삭제하시겠습니까?')) return;
     try {
       await axios.delete(`${API_BASE_URL}/api/comments/${commentId}`, {
         params: { email },
         headers: { Authorization: `Bearer ${token}` },
       });
+      openModal('댓글이 삭제되었습니다.', () => {});
       setRefreshTrigger(n => n + 1);
     } catch {
-      alert('댓글 삭제 실패');
+      // alert('댓글 삭제 실패');
+      openModal('댓글 삭제 실패', () => {});
     }
   };
 
@@ -161,13 +179,16 @@ const Post = () => {
                     <div className="dropdown-menu">
                       <div className="dropdown-item" onClick={() => navigate(`/mypost/${id}`)}>✏️ 수정</div>
                       <div className="dropdown-item" onClick={async () => {
-                        if (!window.confirm('정말 삭제할까요?')) return;
+                        // if (!window.confirm('정말 삭제할까요?')) return;
                         await axios.delete(`${API_BASE_URL}/api/boards/${id}`, {
                           params: { email },
                           headers: { Authorization: `Bearer ${token}` },
                         });
-                        alert('삭제되었습니다.');
-                        navigate('/community');
+                        // alert('삭제되었습니다.');
+                        openModal('삭제되었습니다.', () => {
+                          navigate('/community');
+                        });
+                        
                       }}>🗑️ 삭제</div>
                     </div>
                   )}
@@ -270,6 +291,16 @@ const Post = () => {
           <button onClick={handleCommentSubmit}><FaPaperPlane /></button>
         </div>
       </div>
+      {/* ✅ 공통 모달 */}
+        {showModal && (
+          <Modal
+            message={modalMessage}
+            onClose={() => {
+            setShowModal(false);
+            onModalClose(); // 닫기 후 콜백 실행
+          }}
+        />
+      )}
     </>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './css/Login.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -10,15 +10,33 @@ import AppleLogo from '../assets/AppleLogo.svg';
 import MessengerLogo from '../assets/MessengerLogo.svg';
 import FacebookLogo from '../assets/FacebookLogo.svg';
 
+import Modal from './Modal'; // ✅ 공통 모달 컴포넌트
+
 function Login() {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [modalMessage, setModalMessage] = useState('');
+  const [showModal, setShowModal] = useState(false);
+
+  // ✅ 모달 열릴 때 배경 스크롤 방지
+  useEffect(() => {
+    if (showModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [showModal]);
 
   const handleGoogleLogin = () => {
     console.log('▶️ handleGoogleLogin 호출됨');
     window.location.href = 'http://218.51.41.52.nip.io:9600/oauth2/authorization/google';
+  };
+
+  const showModalWithMessage = (msg) => {
+    setModalMessage(msg);
+    setShowModal(true);
   };
 
   const handleLogin = async () => {
@@ -28,20 +46,24 @@ function Login() {
         password
       });
 
-      const token = response.data.data.token;
-      const userInfo = response.data.data.userInfo;
+      const { token, userInfo } = response.data.data;
 
-      // 토큰과 사용자 정보 저장
       localStorage.setItem('token', token);
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
       localStorage.setItem('email', userInfo.email);
       localStorage.setItem('id', userInfo.id);
 
-      alert('로그인 성공!');
-      navigate('/main'); // 로그인 후 이동할 페이지
+      showModalWithMessage('🎉 로그인에 성공하였습니다!');
     } catch (error) {
       console.error('로그인 실패:', error);
-      alert('로그인에 실패했습니다. 이메일 또는 비밀번호를 확인해주세요.');
+      showModalWithMessage('로그인에 실패했습니다.');
+    }
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    if (modalMessage.includes('성공')) {
+      navigate('/main');
     }
   };
 
@@ -84,27 +106,23 @@ function Login() {
         </div>
 
         <div className="sns-divider">
-          <span>SNS 계정으로 로그인</span>
+          <span>Google 계정으로 로그인</span>
         </div>
 
         <div className="sns-icons">
           <button onClick={handleGoogleLogin} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
             <img src={GoogleLogo} alt="google" />
           </button>
-          <button style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-            <img src={TwitterLogo} alt="twitter" />
-          </button>
-          <button style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-            <img src={AppleLogo} alt="apple" />
-          </button>
-          <button style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-            <img src={MessengerLogo} alt="message" />
-          </button>
-          <button style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-            <img src={FacebookLogo} alt="facebook" />
-          </button>
         </div>
       </div>
+
+      {/* ✅ 공통 모달 */}
+      {showModal && (
+        <Modal
+          message={modalMessage}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   );
 }

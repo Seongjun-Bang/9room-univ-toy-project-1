@@ -4,6 +4,8 @@ import './css/SignUpOCR.css';
 import Camera from '../assets/Camera.svg';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
+import Modal from './Modal'; 
+
 
 // 실제 백엔드 주소
 const API_BASE_URL = 'http://218.51.41.52:9600';
@@ -13,6 +15,18 @@ const API_BASE_URL = 'http://218.51.41.52:9600';
 const JWT_TOKEN = localStorage.getItem('token');
 
 function SignUpOCR() {
+  // ✅ 모달 상태
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [onModalClose, setOnModalClose] = useState(() => () => {});
+
+  // ✅ 모달 표시 함수
+  const openModal = (message, onCloseCallback) => {
+    setModalMessage(message);
+    setOnModalClose(() => onCloseCallback); // 콜백 저장
+    setShowModal(true);
+  };
+
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
 
@@ -21,8 +35,11 @@ function SignUpOCR() {
   useEffect(() => {
     const savedEmail = localStorage.getItem('email');
     if (!savedEmail) {
-      alert('이메일 정보가 없습니다. 로그인 화면으로 이동합니다.');
-      return navigate('/');
+      // alert('이메일 정보가 없습니다. 로그인 화면으로 이동합니다.');
+      openModal('이메일 정보가 없습니다. 로그인 화면으로 이동합니다.', () => {
+        navigate('/');
+      });
+      // return navigate('/');
     }
     setEmail(savedEmail);
   }, [navigate]);
@@ -46,7 +63,8 @@ function SignUpOCR() {
     console.log('🔔 handleSubmit 호출됨, file:', file);
 
     if (!file) {
-      alert('학생증 이미지를 먼저 선택해 주세요.');
+      // alert('학생증 이미지를 먼저 선택해 주세요.');
+      openModal('학생증 이미지를 먼저 선택해 주세요.', () => {});
       return;
     }
 
@@ -72,15 +90,20 @@ function SignUpOCR() {
       console.log('▶️ OCR 응답 본문:', json);
 
       if (res.status === 200) {
-        alert('학과 인증 성공! 메인 화면으로 이동합니다.');
-        localStorage.removeItem('signupEmail');
-        navigate('/main');  // 로그인 화면(“/”)으로 이동
+        // alert('학과 인증 성공! 메인 화면으로 이동합니다.');
+        openModal('학과 인증 성공! 메인 화면으로 이동합니다.', () => {
+          localStorage.removeItem('signupEmail');
+          navigate('/main');  // 로그인 화면(“/”)으로 이동
+        });
+       
       } else {
-        alert(`인증 실패: ${json.message || '알 수 없는 오류'}`);
+        // alert(`인증 실패: ${json.message || '알 수 없는 오류'}`);
+        openModal(`인증 실패: ${json.message || '알 수 없는 오류'}`, () => {});
       }
     } catch (err) {
       console.error('▶️ 네트워크 에러 상세:', err);
-      alert(`네트워크 오류: ${err.message}`);
+      // alert(`네트워크 오류: ${err.message}`);
+      openModal(`네트워크 오류: ${err.message}`, () => {});
     }
   };
 
@@ -122,6 +145,16 @@ function SignUpOCR() {
           </button>
         </form>
       </div>
+      {/* ✅ 공통 모달 */}
+      {showModal && (
+        <Modal
+          message={modalMessage}
+          onClose={() => {
+            setShowModal(false);
+            onModalClose(); // 닫기 후 콜백 실행
+          }}
+        />
+      )}
     </>
   );
 }
